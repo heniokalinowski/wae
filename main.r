@@ -1,9 +1,15 @@
 #!/usr/bin/env Rscript
 source("neural.r")
+source("mutations.r")
 
 
-input_mat <- gen_matrix(2, 10)
-output_mat <- gen_matrix(11, 2)
 input <- t(c(0.5, 1, 2, 3, 4))
-output <- feed_forward(input_mat, output_mat, input)
+network <- gen_network(1, 10, 1)
+output <- feed_forward(network, input)
 print(output)
+
+print("Before")
+network
+added <- add_neuron(network)
+print("After")
+added
