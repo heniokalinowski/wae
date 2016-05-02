@@ -9,7 +9,7 @@ output <- feed_forward(network, input)
 print(output)
 
 print("Before")
-network
+print(network)
 added <- add_neuron(network)
 print("After")
-added
+print(added)
