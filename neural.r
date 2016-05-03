@@ -4,8 +4,7 @@ library("stats")
 printf <- function(...) cat(sprintf(...))
 
 gen_matrix <- function(cols, rows) {
-    res <- matrix(0, rows, cols)
-    res <- apply(res, c(1, 2), function(x) return(rnorm(1)))
+    res <- matrix(rnorm(rows * cols), ncol = cols)
     return(res)
 }
 
@@ -20,6 +19,7 @@ gen_network <- function(input_size, hidden_size, output_size) {
 # TODO: Inne opcje?
 activation_fun <- function(x) {
     return(2 / (1 + exp(-2 * x)) - 1)
+    #return(x)
 }
 
 act <- function(vec) {
@@ -40,8 +40,8 @@ is_ok_input <- function(network, input) {
 }
 
 num_hidden <- function(network) {
-    input_rows <- dim(network$input_mat)[1]
-    output_cols <- dim(network$output_mat)[2]
+    input_rows <- nrow(network$input_mat)
+    output_cols <- ncol(network$output_mat)
 
     if(output_cols != input_rows + 1) {
         printf("Input/output matrix rows/cols do not match: %d != %d\n", input_rows, output_cols + 1)
