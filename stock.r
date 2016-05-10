@@ -9,8 +9,10 @@ x <- as.vector(eurpln$timestamp)
 y <- as.vector(eurpln$RateBid)
 
 print("START")
+print(x)
 print(min(x))
 print("--------------")
+print(y)
 print(min(y))
 print("END")
 
