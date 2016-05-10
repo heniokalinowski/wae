@@ -10,7 +10,14 @@ normalize <- function(values)
   
   return(list(minimum=minimum, maximum=maximum, values=values))
 }
-  
+
+renormalize <- function(minimum, maximum, values)
+{
+    values <- values - minimum
+    values <- values / maximum
+    return(values)
+}
+
 denormalize3 <- function(minimum, maximum, values)
 {
   values <- values * maximum
