@@ -4,9 +4,10 @@ source("normalization.r")
 source("main.r")
 
 eurpln <- read.csv(file="EUR_PLN_Week1.csv",head=TRUE,sep=",")
+xy <- na.omit(list(x=eurpln$timestamp, y=eurpln$RateBid))
 
-x <- as.vector(eurpln$timestamp)
-y <- as.vector(eurpln$RateBid)
+x <- t(as.vector(xy$x))
+y <- t(as.vector(xy$y))
 
 print("START")
 print(min(x))
