@@ -10,8 +10,10 @@ x <- t(as.vector(xy$x))
 y <- t(as.vector(xy$y))
 
 print("START")
+print(x)
 print(min(x))
 print("--------------")
+print(y)
 print(min(y))
 print("END")
 
