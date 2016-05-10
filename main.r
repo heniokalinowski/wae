@@ -35,7 +35,6 @@ run_test <- function(input_raw, output_raw, tested_fun, num_iter, err_fun, do_pl
     }
 
     for(iter in 1:num_iter) {
-    #if(FALSE){
         net_set <- new_pop(net_set, input, output_raw, output_norm_data, err_fun)
         # Zachowujemy najlepszego
         best_from_set <- net_set[[1]]
@@ -44,7 +43,8 @@ run_test <- function(input_raw, output_raw, tested_fun, num_iter, err_fun, do_pl
         # Dodajemy go z powrotem
         net_set[[length(net_set) + 1]] <- best_from_set
         best_output <- feed_forward(best_from_set, input)
-        printf("Iter %d, best error: %.3f\n", iter, get_error(best_from_set, input, output_raw, output_norm_data, err_fun))
+        total_error <- get_error(best_from_set, input, output_raw, output_norm_data, err_fun)
+        printf("Iter %d, best error total: %.3f average: %.3f\n", iter, total_error, total_error / ncol(input))
         predicted_normalized <- feed_forward(best_from_set, input)
         predicted <- denormalize3(output_norm_data$minimum, output_norm_data$maximum, predicted_normalized)
 
@@ -60,9 +60,9 @@ run_test <- function(input_raw, output_raw, tested_fun, num_iter, err_fun, do_pl
     return(best_from_set)
 }
 
+tested_fun <- function(x) return(x*x*x/exp(x))
 input_raw <- t(seq(2,5,length=20))
 output_raw <- apply(input_raw, 2, tested_fun)
-tested_fun <- function(x) return(x*x*x/exp(x))
 num_iter <- 100
 err_fun <- function(x) return(x * x)
 
