@@ -74,11 +74,21 @@ randomize_input_weight <- function(network) {
     return(network)
 }
 
+randomize_output_weight <- function(network) {
+  dm <- dim(network$output_mat)
+  out_rows <- dm[1]
+  out_cols <- dm[2]
+  index_c <- sample(1:out_cols, 1)
+  index_r <- sample(1:out_rows, 1)
+  network$output_mat[index_r, index_c] <- rnorm(1)
+  return(network)
+}
+
 crossover <- function(network) {
 }
 
 maybe_mutate <- function(network) {
-    return(sample(c(add_neuron, remove_neuron, randomize_input_weight), 1)[[1]](network))
+    return(sample(c(add_neuron, remove_neuron, randomize_input_weight, randomize_output_weight), 1)[[1]](network))
 }
 
 mutate_set <- function(net_set) {

@@ -15,7 +15,7 @@ test_result <- function(net_norm, input_raw, output_raw, err_fun, do_plot) {
     predicted <- denormalize3(output_norm_data$minimum, output_norm_data$maximum, predicted_normalized)
 
     total_error <- get_error(net_norm$net, input, output_raw, output_norm_data, err_fun)
-    printf("Test data, error total: %.3f average: %.3f\n", total_error, total_error / ncol(input))
+    printf("Test data, error total: %.3f average: %.6f\n", total_error, total_error / ncol(input))
 
     if(missing(do_plot)) {
         do_plot <- TRUE
@@ -33,14 +33,18 @@ test_result <- function(net_norm, input_raw, output_raw, err_fun, do_plot) {
     return(predicted)
 }
 
-run_test <- function(input_raw, output_raw, num_iter, err_fun, do_plot) {
+run_test <- function(input_raw, output_raw, num_iter, err_fun, pop_size, do_plot) {
     input_norm_data <- normalize(input_raw)
     input <- input_norm_data$values
 
     output_norm_data <- normalize(output_raw)
     output <- output_norm_data$values
+    
+    if(missing(pop_size)) {
+        pop_size = 50
+    }
 
-    net_set <- lapply(1:100, function(x) return(gen_network(1, 10, 1)))
+    net_set <- lapply(1:pop_size, function(x) return(gen_network(1, sample(2:10, 1), 1)))
     first <- net_set[[1]]
 
     if(missing(do_plot)) {
@@ -73,7 +77,8 @@ run_test <- function(input_raw, output_raw, num_iter, err_fun, do_plot) {
         # Dodajemy go z powrotem
         net_set[[length(net_set) + 1]] <- best_from_set
         total_error <- get_error(best_from_set, input, output_raw, output_norm_data, err_fun)
-        printf("Iter %d, best error total: %.3f average: %.3f\n", iter, total_error, total_error / ncol(input))
+        printf("Iter %d, best error total: %.3f average: %.6f, neurons: %d\n", 
+               iter, total_error, total_error / ncol(input), num_hidden((best_from_set)))
         predicted_normalized <- feed_forward(best_from_set, input)
         predicted <- denormalize3(output_norm_data$minimum, output_norm_data$maximum, predicted_normalized)
 

@@ -15,6 +15,7 @@ renormalize <- function(minimum, maximum, values)
 {
     values <- values - minimum
     values <- values / maximum
+    
     return(values)
 }
 
