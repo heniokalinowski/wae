@@ -13,14 +13,15 @@ if(!all(startingVector == denormalized))
 } 
 
 
-tested_fun <- function(x) return(sin(x)*x)
+tested_fun <- function(x) return(x*x*x)
 input_raw <- t(seq(2,20,length=20))
 output_raw <- apply(input_raw, 2, tested_fun)
 num_iter <- 100
 err_fun <- function(x) return(x * x)
 do_plot <- TRUE
+pop_size <- 100
 
-net_norm <- run_test(input_raw, output_raw, num_iter, err_fun, do_plot)
+net_norm <- run_test(input_raw, output_raw, num_iter, err_fun, pop_size, do_plot)
 
 input_test <- t(seq(1, 8, length=20))
 output_test <- apply(input_test, 2, tested_fun)
