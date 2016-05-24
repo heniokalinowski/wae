@@ -68,15 +68,10 @@ run_test <- function(input_raw, output_raw, num_iter, err_fun, pop_size, do_plot
         num_iter <- 100
     }
 
-    # 1%
-    regen_size <- max(1, pop_size / 100)
-
     for(iter in 1:num_iter) {
         net_set <- new_pop(net_set, input, output_raw, output_norm_data, err_fun)
         # Zachowujemy najlepszego
         best_from_set <- net_set[[1]]
-        # Odrzucamy najgorszych i generujemy na nowo
-        net_set[(length(net_set) - regen_size):length(net_set)] <- lapply(1:regen_size, function(x) return(gen_network(1, sample(2:10, 1), 1)))
         # Nie mutujemy najlepszego
         net_set <- mutate_set(net_set[2:length(net_set)])
         # Dodajemy go z powrotem

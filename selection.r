@@ -19,6 +19,8 @@ new_pop <- function(net_set, input_normalized, output_raw, output_norm_data, err
     probs <- mclapply(net_set, function(x) return(rate(x, input_normalized, output_raw, output_norm_data, err_fun)), mc.cores = 4)
     rval <- sample(net_set, size = length(net_set) - 1, prob = probs)
     max_index <- which.max(probs)
+    min_index <- which.min(probs)
+    net_set[min_index] <- list(gen_network(1, sample(2:10, 1), 1))
     rval <- c(net_set[max_index], rval)
     return(rval)
 }
