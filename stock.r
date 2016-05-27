@@ -2,6 +2,7 @@
 
 source("normalization.r")
 source("main.r")
+source("knn.r")
 
 eurpln <- read.csv(file="EUR_PLN_Week1.csv",head=TRUE,sep=",",colClasses=c("double", "double"))
 xy <- na.omit(list(x=eurpln$time, y=eurpln$RateBid))
