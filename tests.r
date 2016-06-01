@@ -31,8 +31,8 @@ learning_output_raw <- t(output_raw[learning_set_indices])
 test_input_raw <- t(input_raw[-learning_set_indices])
 test_output_raw <- t(output_raw[-learning_set_indices])
 
-net_norm <- run_test(learning_input_raw, learning_output_raw, num_iter, err_fun, pop_size, do_plot)
-test_result(net_norm, test_input_raw, test_output_raw, err_fun, do_plot)
-
 num_neighbors <- 4
 knn_test(learning_input_raw, learning_output_raw, test_input_raw, test_output_raw, num_neighbors, err_fun, do_plot)
+
+net_norm <- run_test(learning_input_raw, learning_output_raw, num_iter, err_fun, pop_size, do_plot)
+test_result(net_norm, test_input_raw, test_output_raw, err_fun, do_plot)

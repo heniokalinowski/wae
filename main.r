@@ -68,17 +68,22 @@ run_test <- function(input_raw, output_raw, num_iter, err_fun, pop_size, do_plot
         num_iter <- 100
     }
 
+    last_error <- 0
     for(iter in 1:num_iter) {
         net_set <- new_pop(net_set, input, output_raw, output_norm_data, err_fun)
         # Zachowujemy najlepszego
         best_from_set <- net_set[[1]]
         # Nie mutujemy najlepszego
-        net_set <- mutate_set(net_set[2:length(net_set)])
+        net_set <- mutate_set(net_set[2:length(net_set)], best_from_set)
         # Dodajemy go z powrotem
         net_set[[length(net_set) + 1]] <- best_from_set
         total_error <- get_error(best_from_set, input, output_raw, output_norm_data, err_fun)
-        printf("Iter %d, best error total: %.3f average: %.6f, neurons: %d\n", 
-               iter, total_error, total_error / ncol(input), num_hidden((best_from_set)))
+        if(last_error != total_error) {
+            printf("Iter %d, best error total: %.3f average: %.6f, neurons: %d\n", 
+                   iter, total_error, total_error / ncol(input), num_hidden((best_from_set)))
+            last_error <- total_error
+        }
+
         predicted_normalized <- feed_forward(best_from_set, input)
         predicted <- denormalize3(output_norm_data$minimum, output_norm_data$maximum, predicted_normalized)
 

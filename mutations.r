@@ -84,13 +84,19 @@ randomize_output_weight <- function(network) {
     return(network)
 }
 
+no_mutation <- function(network) {
+    return(network)
+}
+
+crossover_factor <- 2
+
 crossover_input_weight <- function(left, right) {
     dm <- dim(left$input_mat)
     in_rows <- dm[1]
     in_cols <- dm[2]
     index_c <- sample(1:in_cols, 1)
     index_r <- sample(1:in_rows, 1)
-    left$input_mat[index_r, index_c] <- 2 * left$input_mat[index_r, index_c] - right$input_mat[index_r, index_c]
+    left$input_mat[index_r, index_c] <- crossover_factor * left$input_mat[index_r, index_c] - right$input_mat[index_r, index_c]
     return(left)
 }
 
@@ -100,13 +106,13 @@ crossover_output_weight <- function(left, right) {
     out_cols <- dm[2]
     index_c <- sample(1:out_cols, 1)
     index_r <- sample(1:out_rows, 1)
-    left$output_mat[index_r, index_c] <- 2 * left$output_mat[index_r, index_c] - right$output_mat[index_r, index_c]
+    left$output_mat[index_r, index_c] <- crossover_factor * left$output_mat[index_r, index_c] - right$output_mat[index_r, index_c]
     return(left)
 }
 
 crossover_all <- function(left, right) {
-    left$output_mat <- 2 * left$output_mat - right$output_mat
-    left$input_mat <- 2 * left$input_mat - right$input_mat
+    left$output_mat <- crossover_factor * left$output_mat - right$output_mat
+    left$input_mat <- crossover_factor * left$input_mat - right$input_mat
     return(left)
 }
 
@@ -115,18 +121,20 @@ crossover <- function(left, right) {
 }
 
 mutate <- function(network) {
-    return(sample(c(add_neuron, remove_neuron, randomize_input_weight, randomize_output_weight), 1)[[1]](network))
+    return(sample(c(add_neuron, remove_neuron, randomize_input_weight, randomize_output_weight, no_mutation), 1)[[1]](network))
 }
 
-mutate_set <- function(net_set) {
+mutate_set <- function(net_set, best) {
     crossover_size <- length(net_set) * 0.5
-    cross_set <- sample(net_set, crossover_size)
-    for(set in cross_set) {
-        other <- sample(net_set, 1)[[1]]
-        if(num_hidden(set) == num_hidden(other)) {
-            set <- crossover(set, other)
+    cross_set <- sample(1:length(net_set), crossover_size)
+    for(set_index in cross_set) {
+        #other <- sample(net_set, 1)[[1]]
+        #if(num_hidden(set) == num_hidden(other)) {
+        
+        if(num_hidden(net_set[[set_index]]) == num_hidden(best)) {
+            net_set[[set_index]] <- crossover(best, net_set[[set_index]])
         }
     }
-    
+
     return(lapply(net_set, FUN = mutate))
 }
