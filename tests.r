@@ -2,6 +2,7 @@
 
 source("normalization.r")
 source("main.r")
+source("knn.r")
 
 startingVector <- c(1, 2, 3, 4)
 normalized <- normalize(startingVector)
@@ -13,16 +14,25 @@ if(!all(startingVector == denormalized))
 } 
 
 
-tested_fun <- function(x) return(x*x*x)
-input_raw <- t(seq(2,20,length=20))
+tested_fun <- function(x) return(sin(x))
+input_raw <- t(seq(0,3.5,length=50))
 output_raw <- apply(input_raw, 2, tested_fun)
-num_iter <- 100
+num_iter <- 200
 err_fun <- function(x) return(x * x)
 do_plot <- TRUE
 pop_size <- 100
 
-net_norm <- run_test(input_raw, output_raw, num_iter, err_fun, pop_size, do_plot)
+learning_set_indices <- sample(1:length(input_raw), floor(length(input_raw) * 0.7))
+learning_set_indices <- learning_set_indices[order(learning_set_indices)]
 
-input_test <- t(seq(1, 8, length=20))
-output_test <- apply(input_test, 2, tested_fun)
-res <- test_result(net_norm, input_test, output_test, err_fun, do_plot)
+learning_input_raw <- t(input_raw[learning_set_indices])
+learning_output_raw <- t(output_raw[learning_set_indices])
+
+test_input_raw <- t(input_raw[-learning_set_indices])
+test_output_raw <- t(output_raw[-learning_set_indices])
+
+net_norm <- run_test(learning_input_raw, learning_output_raw, num_iter, err_fun, pop_size, do_plot)
+test_result(net_norm, test_input_raw, test_output_raw, err_fun, do_plot)
+
+num_neighbors <- 4
+knn_test(learning_input_raw, learning_output_raw, test_input_raw, test_output_raw, num_neighbors, err_fun, do_plot)
